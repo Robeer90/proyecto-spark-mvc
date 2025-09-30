@@ -1,15 +1,14 @@
-from spark_session import create_spark_session
-from models.db_connection import get_db_connection
+from models.ibex_model import IBEXModel
 
 def main():
-    spark = create_spark_session()
-    url = "jdbc:postgresql://localhost:5432/mi_base"
-    table = "mi_tabla"
-    user = "usuario"
-    password = "contraseña"
-    
-    df = get_db_connection(spark, url, table, user, password)
-    df.show()
+    # Inicializar modelo (SparkSession + CSV)
+    model = IBEXModel("data/ibex35.csv")
+
+    # Mostrar primeras filas
+    model.df.show(5)
+
+    # Guardar DataFrame completo en MySQL
+    model.guardar_mysql(model.df, "Datos2024")  # la tabla se crea/reescribe
 
 if __name__ == "__main__":
     main()
