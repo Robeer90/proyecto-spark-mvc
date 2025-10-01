@@ -24,14 +24,20 @@ def main():
 
     # 2) Mostrar esquema y 6 filas antes de convertir
     df.printSchema()
-    df.show(6)
 
-    # 3) Convertir Fecha y castear numéricas (si ya añadiste estas funciones)
-    df_new = modificaciones.convertir_fech_ddMMyyyy(df)
+    # 3) Aplicar la funcion
+    df_new = modificaciones.convertir_fecha_ddMMyyyy(df)
 
     # 4) Verificar
     df_new.printSchema()
     df_new.show(6)
+
+    print("Ej1-b")
+    #1) Aplicar la funcion
+    df_new1 = modificaciones.eliminamc(df_new)
+
+    #2)Imprimir muestra
+    df_new1.show(6)
 
 if __name__ == "__main__":
     main()
