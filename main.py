@@ -42,7 +42,9 @@ def main():
     print("Ej2-a")
     #1) Aplicar la funcion
     df_new2 = modificaciones.elimina_duplicados(df_new1)
-    
+    print("Ej2-b")
+    #1) Aplicae la funcion
+    df_new2 = modificaciones.rango_fechas(df_new2)
 if __name__ == "__main__":
     main()
 
