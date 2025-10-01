@@ -27,12 +27,11 @@ def main():
     df.show(6)
 
     # 3) Convertir Fecha y castear numéricas (si ya añadiste estas funciones)
-    df = modificaciones.convertir_fecha_ddMMyyyy(df)
-    df = modificaciones.castear_columnas_numericas(df, excluir=("Fecha",))
+    df_new = modificaciones.convertir_fech_ddMMyyyy(df)
 
     # 4) Verificar
-    df.printSchema()
-    df.show(6)
+    df_new.printSchema()
+    df_new.show(6)
 
 if __name__ == "__main__":
     main()
