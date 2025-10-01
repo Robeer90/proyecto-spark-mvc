@@ -1,3 +1,4 @@
+# src/modelo/spark_session.py
 from pyspark.sql import SparkSession
 
 def create_spark_session(app_name="IBEX35", jar_path=None):
