@@ -36,9 +36,13 @@ def main():
     #1) Aplicar la funcion
     df_new1 = modificaciones.eliminamc(df_new)
 
-    #2)Imprimir muestra
+    #2) Imprimir muestra
     df_new1.show(6)
 
+    print("Ej2-a")
+    #1) Aplicar la funcion
+    df_new2 = modificaciones.elimina_duplicados(df_new1)
+    
 if __name__ == "__main__":
     main()
 
