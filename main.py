@@ -48,9 +48,12 @@ def main():
     print("Ej3")
     #1) Aplicar funcion
     df_new3 = modificaciones.apartado3(df_new2)
+    #2)Mostrar las 10 primeras lineas
     df_new3.show(10)
+    #3)Mostrar las 100 primeras lineas
     df_new3.show(100)
+    print("Ej4")
+    df_new4 = modificaciones.Variacion_anual(df_new3)
     spark.stop()
 if __name__ == "__main__":
     main()
-

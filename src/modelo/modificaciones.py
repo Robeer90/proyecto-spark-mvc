@@ -46,3 +46,33 @@ def apartado3(df):
     #3
     df_new = df_new.withColumn("Deficiency Notice UNI", col("UNI") < 1)
     return df_new
+#Ej4
+def Variacion_anual(df):
+    fecha_col = "Dia"
+    fecha_ini = df.select(min(fecha_col)).first()[0]
+    fecha_fin = df.select(max(fecha_col)).first()[0]
+    empresas = [c for c in df.columns if c != fecha_col]
+    for emp in empresas:
+        row_ini = df.where(col(fecha_col) == fecha_ini).select(emp).first()
+        row_fin = df.where(col(fecha_col) == fecha_fin).select(emp).first()
+        val_ini = None if row_ini is None else row_ini[0]
+        val_fin = None if row_fin is None else row_fin[0]
+        if val_ini is None or val_fin is None:
+            return
+        ini = float(val_ini)
+        fin = float(val_fin)
+        if ini == 0.0:
+            return
+        var_pct = ((fin - ini) / ini) * 100.0
+        if var_pct >= 15:
+            categoria = "Subida Fuerte"
+        elif var_pct > 1:
+            categoria = "Subida"
+        elif var_pct <= -15:
+            categoria = "Bajada Fuerte"
+        elif var_pct < -1:
+            categoria = "Bajada"
+        else:
+            categoria = "Neutra"
+        print(f"{emp}: inicio={ini}, fin={fin}, variación={var_pct:.2f}%, categoría={categoria}")
+    return df
