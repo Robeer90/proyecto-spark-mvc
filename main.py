@@ -47,7 +47,9 @@ def main():
     df_new2 = modificaciones.rango_fechas(df_new2)
     print("Ej3")
     #1) Aplicar funcion
-    
+    df_new3 = modificaciones.apartado3(df_new2)
+    df_new3.show(10)
+    spark.stop()
 if __name__ == "__main__":
     main()
 

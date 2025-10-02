@@ -1,7 +1,5 @@
-from src.modelo.spark_session import *
-from pyspark.sql.functions import * 
-from pyspark.sql.types import * 
-from pyspark.sql.window import * 
+#modificaciones
+from pyspark.sql.functions import col, to_date, min, max
 # Ej1-a: carga inicial y conversión de fecha
 def convertir_fecha_ddMMyyyy(df):
     return df.withColumn("Fecha", to_date(col("Fecha"), "dd/MM/yyyy"))
@@ -34,3 +32,8 @@ def rango_fechas(df):
     print("El rango de fechas es coherente con un año natural.")
     print("No es necesario buscar datos adicionales, ya cubre el periodo completo.\n")
     return df
+#Ej3
+def apartado3(df):
+    #1
+    df_new = df.withColumnRenamed("Fecha", "Dia")
+    return df_new
