@@ -49,6 +49,7 @@ def main():
     #1) Aplicar funcion
     df_new3 = modificaciones.apartado3(df_new2)
     df_new3.show(10)
+    df_new3.show(100)
     spark.stop()
 if __name__ == "__main__":
     main()

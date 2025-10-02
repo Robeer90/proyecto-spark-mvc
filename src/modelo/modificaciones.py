@@ -1,5 +1,5 @@
 #modificaciones
-from pyspark.sql.functions import col, to_date, min, max
+from pyspark.sql.functions import col, to_date, min, max, avg
 # Ej1-a: carga inicial y conversión de fecha
 def convertir_fecha_ddMMyyyy(df):
     return df.withColumn("Fecha", to_date(col("Fecha"), "dd/MM/yyyy"))
@@ -36,4 +36,13 @@ def rango_fechas(df):
 def apartado3(df):
     #1
     df_new = df.withColumnRenamed("Fecha", "Dia")
+    #2
+    empresas = [c for c in df_new.columns if c != "Dia"]
+    for c in empresas:
+        maximo = df_new.select(max(col(c))).first()[0]
+        minimo = df_new.select(min(col(c))).first()[0]
+        media = df_new.select(avg(col(c))).first()[0]
+    print(f"{c} - Media: {media}, Maximo: {maximo}, Min: {minimo}")
+    #3
+    df_new = df_new.withColumn("Deficiency Notice UNI", col("UNI") < 1)
     return df_new
