@@ -43,8 +43,11 @@ def main():
     #1) Aplicar la funcion
     df_new2 = modificaciones.elimina_duplicados(df_new1)
     print("Ej2-b")
-    #1) Aplicae la funcion
+    #1) Aplicar la funcion
     df_new2 = modificaciones.rango_fechas(df_new2)
+    print("Ej3")
+    #1) Aplicar funcion
+    
 if __name__ == "__main__":
     main()
 

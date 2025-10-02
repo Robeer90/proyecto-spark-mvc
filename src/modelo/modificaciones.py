@@ -15,27 +15,23 @@ def eliminamc(df):
     return df_new
 #Ej2-a: 
 def elimina_duplicados(df):
-    total_antes = df.count()
-    #Limpiar los duplicados por fecha
-    df_clean = df.dropDuplicates(subset=["Fecha"])
-    total_despues = df_clean.count()
-    eliminadas = total_antes - total_despues
-    #Saca los nombres de las empresas
-    empresas = [c for c in df_clean.columns if c != "Fecha"]
-    #Hace un diccionario con el nombre de las empresas y el conteo
-    cont = df_clean.agg(*[F_count(col(c)).alias(c) for c in empresas]).collect()[0].asDict()
-    #Quita las empresas con valores nulos
-    empresas_con_info = [c for c, cnt in cont.items() if cnt > 0]
-    num_empresas = len(empresas_con_info)
-    print(f"Duplicados eliminados (por Fecha): {eliminadas}")
-    print(f"Empresas con información disponible: {num_empresas}")
-    return df_clean
+    num_filas_original = df.count()
+    df_sin_duplicados = df.dropDuplicates()
+    num_filas_final = df_sin_duplicados.count()
+    print("Filas eliminadas: ", num_filas_original - num_filas_final)
+    columnas_utiles = [c for c in df_sin_duplicados.columns if df_sin_duplicados.select(c).distinct().count() > 1]
+    df_final = df_sin_duplicados.select(columnas_utiles)
+    print("Empresas con información: ", len(df_final.columns) - 1)
+    return df_final
 #Ej2-b
 def rango_fechas(df):
+    #Saca la fecha mas reciente y la mas antigua
     rangos = df.agg(F_min("Fecha").alias("fecha_min"), F_max("Fecha").alias("fecha_max")).collect()[0]
     fecha_min = rangos["fecha_min"]
     fecha_max = rangos["fecha_max"]
+    #Se asegura de que no haya fechas repetidas
     dias_distintos = df.select("Fecha").distinct().count()
+    #Se calcula la longitud del intervalo de fechas
     dias_totales = df.select((datediff(lit(fecha_max), lit(fecha_min)) + lit(1)).alias("dias_totales")).collect()[0]["dias_totales"]
     dias_faltantes = dias_totales - dias_distintos
     print(f"Fecha mínima: {fecha_min}")
