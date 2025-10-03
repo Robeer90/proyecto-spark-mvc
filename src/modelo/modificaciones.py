@@ -1,17 +1,17 @@
 #modificaciones
-from pyspark.sql.functions import col, to_date, min, max, avg
+from pyspark.sql.functions import col, to_date, min, max, avg, when
 # Ej1-a: carga inicial y conversión de fecha
 def convertir_fecha_ddMMyyyy(df):
     return df.withColumn("Fecha", to_date(col("Fecha"), "dd/MM/yyyy"))
 
-#Ej1-b: elimina el sufijo .MC
+#Ej1-b
 def eliminamc(df):
     df_new = df
     for c in df.columns:
         if c.endswith(".MC"):
             df_new = df_new.withColumnRenamed(c, c[:-3])
     return df_new
-#Ej2-a: 
+#Ej2-a
 def elimina_duplicados(df):
     total_antes = df.count()
     df_clean = df.dropDuplicates()
@@ -31,6 +31,7 @@ def rango_fechas(df):
     print("Dias con informacion disponible", dias_disponibles)
     print("El rango de fechas es coherente con un año natural.")
     print("No es necesario buscar datos adicionales, ya cubre el periodo completo.\n")
+    print("Referencias: Yahoo Finance, BME")
     return df
 #Ej3
 def apartado3(df):
@@ -39,10 +40,11 @@ def apartado3(df):
     #2
     empresas = [c for c in df_new.columns if c != "Dia"]
     for c in empresas:
+        num_col = col(c) * 1.0
         maximo = df_new.select(max(col(c))).first()[0]
         minimo = df_new.select(min(col(c))).first()[0]
         media = df_new.select(avg(col(c))).first()[0]
-    print(f"{c} - Media: {media}, Maximo: {maximo}, Min: {minimo}")
+        print(f"{c} - Media: {media}, Maximo: {maximo}, Min: {minimo}")
     #3
     df_new = df_new.withColumn("Deficiency Notice UNI", col("UNI") < 1)
     return df_new
@@ -58,11 +60,11 @@ def Variacion_anual(df):
         val_ini = None if row_ini is None else row_ini[0]
         val_fin = None if row_fin is None else row_fin[0]
         if val_ini is None or val_fin is None:
-            return
+            continue
         ini = float(val_ini)
         fin = float(val_fin)
         if ini == 0.0:
-            return
+            continue
         var_pct = ((fin - ini) / ini) * 100.0
         if var_pct >= 15:
             categoria = "Subida Fuerte"
@@ -76,3 +78,19 @@ def Variacion_anual(df):
             categoria = "Neutra"
         print(f"{emp}: inicio={ini}, fin={fin}, variación={var_pct:.2f}%, categoría={categoria}")
     return df
+def cuartil(df):
+    empresas = [c for c in df.columns if c not in ["Dia", "Deficiency Notice UNI"]]
+    df_cuartiles = df
+    for empresa in empresas:
+        percentiles = df_cuartiles.withColumn("tmp", col(empresa) * 1.0) \
+            .approxQuantile("tmp", [0.25, 0.5, 0.75], 0.01)
+        q1, q2, q3 = percentiles
+        nombre_columna = f"{empresa}Cuartil"
+        df_cuartiles = df_cuartiles.withColumn(
+            nombre_columna,
+            when((col(empresa) * 1.0) <= q1, "q1")
+            .when((col(empresa) * 1.0) <= q2, "q2")
+            .when((col(empresa) * 1.0) <= q3, "q3")
+            .otherwise("q4")
+        )
+    return df_cuartiles

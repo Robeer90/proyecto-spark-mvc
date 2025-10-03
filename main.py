@@ -54,6 +54,10 @@ def main():
     df_new3.show(100)
     print("Ej4")
     df_new4 = modificaciones.Variacion_anual(df_new3)
+    print("Ej5")
+    df_new5 = modificaciones.cuartil(df_new4)
+    df_new5.show(1, truncate=False)
+    df_new5.select("AENA", "AENACuartil", "BBVA", "BBVACuartil").show(20, truncate=False)
     spark.stop()
 if __name__ == "__main__":
     main()
