@@ -1,3 +1,4 @@
+# src/modelo/conexion.py
 from utils.db_connection import get_db_properties, get_jdbc_url
 
 def save_to_db(df, table_name, mode="overwrite"):
