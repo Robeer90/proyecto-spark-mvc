@@ -3,16 +3,16 @@ from pathlib import Path
 import os
 
 PROJECT_ROOT = Path(__file__).parent.resolve()
-os.chdir(PROJECT_ROOT)  # opcional, ayuda con rutas relativas
+os.chdir(PROJECT_ROOT)  
 
 DATA_PATH = PROJECT_ROOT / "data" / "ibex35.csv"
 JAR_PATH  = PROJECT_ROOT / "libs" / "mysql-connector-j-8.0.33" / "mysql-connector-j-8.0.33.jar"
 
 from src.modelo.spark_session import create_spark_session
 from src.modelo import modificaciones
-from src.modelo.conexion import save_to_db  # <-- NUEVO
+from src.modelo.conexion import save_to_db  
 
-from pyspark.sql.functions import col  # por si lo necesitas luego
+from pyspark.sql.functions import col  
 
 def sanitize_for_sql(df):
     """Evita puntos/espacios en nombres de columnas (MySQL/JDBC)."""
@@ -30,7 +30,7 @@ def main():
           .option("sep", ";")
           .csv(str(DATA_PATH)))
 
-    # RAW -> a BD (tal cual se leyó, solo saneamos nombres)
+    # RAW -> a BD 
     df_raw_sql = sanitize_for_sql(df)
     save_to_db(df_raw_sql, table_name="Datos2024", mode="overwrite")
     print("OK -> MySQL: Datos2024 (RAW)")
@@ -55,7 +55,7 @@ def main():
     print("Ej2-b")
     df_new2 = modificaciones.rango_fechas(df_new2)
 
-    # TRATADO SIN COLUMNAS NUEVAS (hasta Ej2) -> a BD
+    # TRATADO SIN COLUMNAS NUEVAS
     df_tratado_sql = sanitize_for_sql(df_new2)
     save_to_db(df_tratado_sql, table_name="Datos2024_tratado", mode="overwrite")
     print("OK -> MySQL: Datos2024_tratado (tratado SIN columnas nuevas)")

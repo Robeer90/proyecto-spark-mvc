@@ -9,6 +9,4 @@ def create_spark_session(app_name="IBEX35", jar_path=None):
     )
     if jar_path:
         builder = builder.config("spark.driver.extraClassPath", jar_path)
-        # Si ejecutas en cluster local con ejecutores: podrías añadir también
-        # builder = builder.config("spark.executor.extraClassPath", jar_path)
     return builder.getOrCreate()
